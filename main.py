@@ -59,7 +59,82 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     :return: The Tensor for the last layer of output
     """
     # TODO: Implement function
-    return None
+
+    # Reference classroom FCN-8 Encoder and Decoder and the paper mentioned in the Q&A
+
+    weights_init_stddev = 0.01
+    weights_regularized_l2 = 1e-3 # taken from the Q&A
+
+    # Convolution 1x1 vgg layer 7
+    conv_7 = tf.layers.conv2d(vgg_layer7_out,
+                              num_classes,
+                              kernel_size=1,
+                              strides=(1,1),
+                              padding = 'same',
+                              kernel_initializer = tf.random_normal_initializer(stddev=weights_init_stddev),
+                              kernel_regularizer=tf.contrib.layers.l2_regularizer(weights_regularized_l2),
+                              name='conv_7')
+
+    # Deconvolution vgg layer 7
+    deconv_7 = tf.layers.conv2d_transpose(conv_7,
+                                          num_classes,
+                                          kernel_size=4,
+                                          strides=(2,2),
+                                          padding='same',
+                                          kernel_initializer = tf.random_normal_initializer(stddev=weights_init_stddev),
+                                          kernel_regularizer=tf.contrib.layers.l2_regularizer(weights_regularized_l2),
+                                          name='deconv_7')
+
+
+    # Convolution 1x1 vgg layer 4
+    conv_4 = tf.layers.conv2d(vgg_layer4_out,
+                              num_classes,
+                              kernel_size=1,
+                              strides=(1,1),
+                              padding='same',
+                              kernel_initializer = tf.random_normal_initializer(stddev=weights_init_stddev),
+                              kernel_regularizer=tf.contrib.layers.l2_regularizer(weights_regularized_l2),
+                              name='conv_4')
+
+    # Skip Layer 4
+    skip_layer_4 = tf.add(deconv_7, conv_4, name='skip_layer_4')
+
+    # Deconvolution vgg layer 4
+    deconv_4 = tf.layers.conv2d_transpose(skip_layer_4,
+                                          num_classes,
+                                          kernel_size=4,
+                                          strides=(2,2),
+                                          padding='same',
+                                          kernel_initializer = tf.random_normal_initializer(stddev=weights_init_stddev),
+                                          kernel_regularizer=tf.contrib.layers.l2_regularizer(weights_regularized_l2),
+                                          name='deconv_4')
+
+
+    # Convolution 1x1 vgg layer 3
+    conv_3 = tf.layers.conv2d(vgg_layer3_out,
+                              num_classes,
+                              kernel_size=1,
+                              strides=(1,1),
+                              padding='same',
+                              kernel_initializer = tf.random_normal_initializer(stddev=weights_init_stddev),
+                              kernel_regularizer=tf.contrib.layers.l2_regularizer(weights_regularized_l2),
+                              name='conv_3')
+
+    # Skip Layer 3
+    skip_layer_3 = tf.add(deconv_4, conv_3, name='skip_layer_3')
+
+    # Deconvolution vgg layer 3
+    deconv_3 = tf.layers.conv2d_transpose(skip_layer_3,
+                                          num_classes,
+                                          kernel_size=16, # Changed from 4 to 16
+                                          strides=(8,8),
+                                          padding='same',
+                                          kernel_initializer = tf.random_normal_initializer(stddev=weights_init_stddev),
+                                          kernel_regularizer=tf.contrib.layers.l2_regularizer(weights_regularized_l2),
+                                          name='deconv_3')
+
+
+    return deconv_3
 tests.test_layers(layers)
 
 
