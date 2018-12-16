@@ -1,10 +1,52 @@
 # Semantic Segmentation
+
+# Overview
+This project represents the implementation of Semantic Segmentation project of Udacity's Self Driving Car Nanodegree
+
+The goal of the project is to color each pixel from each picture which represents the road using 
+a Fully Convoluted Network (FCN).
+
+The Kitti dataset was used for training.
+
+The FCN is used because it retains spatial information during training and this is helpful to identify objects of interest
+in an image. The architecture is as follows:
+- Encoder (pre-trained VGG16 NN)
+- 1x1 Convolution
+- Decoder (transposed convolutions and skip connection layers)
+
+# Output
+## 6 Epochs
+Random Image 1          |  Random Image 2
+:-------------------------:|:-------------------------:
+![6 epochs](./sample_images/6_epochs_um_000000.png)  |  ![6 epochs](./sample_images/6_epochs_uu_000063.png)
+---
+
+## 12 Epochs
+Random Image 1          |  Random Image 2
+:-------------------------:|:-------------------------:
+![12 epochs](./sample_images/12_epochs_um_000000.png)  |  ![12 epochs](./sample_images/12_epochs_uu_000063.png)
+---
+
+## 24 Epochs
+Random Image 1          |  Random Image 2
+:-------------------------:|:-------------------------:
+![24 epochs](./sample_images/24_epochs_um_000000.png)  |  ![24 epochs](./sample_images/24_epochs_uu_000063.png)
+---
+
+## 48 Epochs
+Random Image 1          |  Random Image 2
+:-------------------------:|:-------------------------:
+![48 epochs](./sample_images/48_epochs_um_000000.png)  |  ![48 epochs](./sample_images/48_epochs_uu_000063.png)
+---
+
+
 ### Introduction
 In this project, you'll label the pixels of a road in images using a Fully Convolutional Network (FCN).
 
 ### Setup
 ##### GPU
-`main.py` will check to make sure you are using GPU - if you don't have a GPU on your system, you can use AWS or another cloud computing platform.
+`main.py` will check to make sure you are
+ using GPU - if you don't have a GPU on your system, you can use AWS or another cloud computing platform.
 ##### Frameworks and Packages
 Make sure you have the following is installed:
  - [Python 3](https://www.python.org/)
